@@ -22,13 +22,3 @@
  * SOFTWARE.
  */
 /* END LEGAL */
-
-class Lattice
-{
-  /**
-    Brief: Placeholder for generic lattice embedded in R^dim
-   */
-  param type G;
-  param dim: int;
-}
-

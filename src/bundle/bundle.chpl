@@ -23,12 +23,21 @@
  */
 /* END LEGAL */
 
-class Lattice
+class PrincipalBundle
 {
   /**
-    Brief: Placeholder for generic lattice embedded in R^dim
+    Brief: Placeholder for principal fibre bundle (gauge fields)
    */
-  param type G;
-  param dim: int;
+  param type P;
 }
 
+class AssociatedVectorBundle
+{
+  /**
+    Brief: Placeholder for vector bundle associated to 
+    principal bundle (matter fields)
+   */
+  param type A;
+  param principal: PrincipalBundle;
+  param dim: int;
+}
