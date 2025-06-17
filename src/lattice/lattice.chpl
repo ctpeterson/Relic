@@ -23,7 +23,7 @@
  */
 /* END LEGAL */
 
-class PolyhedralComplex
+class Lattice
 {
   /**
    * Class representing generic polyhedral complex in R^dim. At the moment, this
