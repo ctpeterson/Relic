@@ -31,12 +31,18 @@ private use StencilDist;
 
 type PaddedCell = StencilDist.stencilDist;
 
-private proc makeZero(param rank: int){var t: rank*int; return t;}
+private proc defaultPadding(param rank: int){var t: rank*int; return t;}
 
 class SimpleCubicLattice: GeneralLattice.Lattice(?) {
+  /*
+    :var:`SimpleCubicLattice` represents bread and butter simple cubic (primitive)
+    ravais lattice. Most lattice field theory, and especially lattice gauge theory, 
+    utilize a simple cubic lattice.
+  */
+
   proc init(
     geometry: domain(?),
-    padding: geometry.rank*int = makeZero(geometry.rank),
+    padding: geometry.rank*int = defaultPadding(geometry.rank),
     periodic: bool = true
   ){
     const stencil = new PaddedCell(geometry, fluff = padding, periodic = periodic);
