@@ -1,6 +1,6 @@
 /*
  * ReliQ lattice field theory framework: github.com/ctpeterson/ReliQ
- * Source file: src/lattice/GeneralLattice.chpl
+ * Source file: tests/tlattice/tBravaisLattice.chpl
  * Author: Curtis Taylor Peterson <curtistaylorpetersonwork@gmail.com>
  *
  * MIT License
@@ -26,35 +26,11 @@
  * SOFTWARE.
  */
 
-@chpldoc.nodoc
-enum Tile {
-  /* Lattice tiling
+public use BravaisLattice;
 
-     :var:`Tile` specifies the type of tile that each lattice is composed of
-     and hence the number of line segments making up each tile
-  */
-  TRIANGLE = 3, 
-  SQUARE = 4, 
-  UNSTRUCTURED = -1
-};
-
-@chpldoc.nodoc
-class Lattice {
-  /* Generic lattice defining attributes 
-
-     :var:`Lattice` represents generic properties/attributes that every ReliQ lattice
-     should possess. As such, each lattice type in ReliQ inherits from Lattice.
-  */
-  param D: int; // Embedding dimension
-  param T: Tile; // Number of line segments making up each tile of lattice
-  var L: domain(D); // Distributed lattice domain
-
-  // Returns embedding dimension of lattice
-  proc dim: int { return D; }
-
-  // Returns distributed lattice domain
-  proc dom: domain { return L; }
-
-  // Returns number of line segments making up each tile of the lattice
-  proc segments: Tile { return T; }
+// chpl tBravaisLattice.chpl ../../src/lattice/BravaisLattice.chpl
+proc main {
+  var 
+    geometry = {1..8,1..8,1..8,1..8},
+    lattice = new SimpleCubicLattice(geometry);
 }
