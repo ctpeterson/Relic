@@ -27,12 +27,68 @@
  */
 
 module Field {
-  module ScalarField {
-    record RealScalarField {
-      var sites: domain(?);
-      var storage: [sites] real;
-
-      proc init(sites: domain(?)){this.sites = sites;}
+  record ScalarField: serializable {
+    type T;
+    param D: int;
+    var lattice: domain(?);
+    var storage: [lattice] T;
+  
+    proc init(type T, lattice: domain(?)){
+      this.T = T; 
+      this.D = lattice.rank;
+      this.lattice = lattice;
     }
+
+    proc init=(const other: ScalarField(?T))
+    {this.init(T,other.lattice); this.storage = other.storage;}
+
+    proc init=(const other: [?L] ?T){this.init(T,L); this.storage = other;}
+
+    proc this(args: this.D*int){return this.storage[args];}
+
+    proc ref sites: domain(?) {return this.lattice;}
+
+    proc ref field: [this.lattice] this.T {return this.storage;}
   }
+
+  public type 
+    IntegerScalarFieldS = ScalarField(int(32),?),
+    IntegerScalarFieldD = ScalarField(int(64),?),
+    IntegerScalarField = IntegerScalarFieldD(?),
+
+    RealScalarFieldS = ScalarField(real(32),?),
+    RealScalarFieldD = ScalarField(real(64),?),
+    RealScalarField = RealScalarFieldD(?),
+
+    ComplexScalarField = ScalarField(complex,?);
+
+  private proc conformable(x: ScalarField(?), y: ScalarField(?)) 
+  {assert(x.lattice == y.lattice);}
+
+  /*
+  public operator ScalarField.=(ref x: ScalarField(?T,?), y: T){
+    ref xfield = x.field;
+    forall n in x.sites do {xfield[n] = y;}
+  }
+  */
+
+  public operator ScalarField.=(ref x: ScalarField(?), y: ScalarField(?))
+  {assert(x.lattice == y.lattice); x.storage = y.storage;}
+
+  public operator ScalarField.+(x: ScalarField(?X,?D), y: ScalarField(?Y,D)){
+    conformable(x,y);
+    var z = new ScalarField(X,x.lattice);
+    ref zfield = z.field;
+    forall n in z.sites do {zfield[n] = x[n] + y[n];}
+    return z;
+  }
+  
+  public operator ScalarField.*(x: ScalarField(?X,?D), y: ScalarField(?Y,D)){
+    conformable(x,y);
+    var z = new ScalarField(X,x.lattice);
+    ref zfield = z.field;
+    forall n in z.sites do {zfield[n] = x[n]*y[n];}
+    return z;
+  }
+
 }

@@ -34,6 +34,13 @@ proc main() {
     geometry = {1..8,1..8,1..8,1..8},
     lattice = Lattice.BravaisLattice.PaddedBlockDistSimpleCubicLattice(geometry);
   var
-    phi = new Field.ScalarField.RealScalarField(lattice),
-    psi = new Field.ScalarField.RealScalarField(lattice);
+    iphi = new Field.IntegerScalarField(lattice),
+    rphi = new Field.RealScalarField(lattice),
+    rpsi = new Field.RealScalarField(lattice),
+    rphica = rphi,
+    rphicb = rphi.storage,
+    cphi = new Field.ComplexScalarField(lattice);
+  //rphi = 2.0;
+  rpsi = rphi + rphi;
+  rpsi = rphi*rpsi;
 }
