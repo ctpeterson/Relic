@@ -1,6 +1,6 @@
 /*
  * ReliQ lattice field theory framework: github.com/ctpeterson/ReliQ
- * Source file: src/lattice/BravaisLattice.chpl
+ * Source file: src/field/Field.chpl
  * Author: Curtis Taylor Peterson <curtistaylorpetersonwork@gmail.com>
  *
  * MIT License
@@ -26,36 +26,13 @@
  * SOFTWARE.
  */
 
-private use GeneralLattice;
-private use StencilDist;
+module Field {
+  module ScalarField {
+    record RealScalarField {
+      var sites: domain(?);
+      var storage: [sites] real;
 
-type PaddedCell = StencilDist.stencilDist;
-
-private proc defaultPadding(param rank: int){var t: rank*int; return t;}
-
-class SimpleCubicLattice: GeneralLattice.Lattice(?) {
-  /* Simple cubic lattice (Bravais)
-    
-     :var:`SimpleCubicLattice` represents bread and butter simple cubic (primitive)
-     Bravais lattice. Most lattice field theory calculations, and especially lattice 
-     gauge theory calculations, utilize a simple cubic lattice.
-  */
-
-  proc init(
-    geometry: domain(?),
-    threads: int = dataParTasksPerLocale,
-    taskIterationGranularity: int = dataParMinGranularity,
-    padding: geometry.rank*int = defaultPadding(geometry.rank),
-    periodic: bool = true
-  ){
-    const paddedCell = new PaddedCell(
-      geometry, 
-      dataParTasksPerLocale = threads,
-      dataParMinGranularity = taskIterationGranularity,
-      fluff = padding, 
-      periodic = periodic
-    );
-    super.init(geometry.rank,GeneralLattice.Tile.SQUARE);
-    this.L = paddedCell.createDomain(geometry);
+      proc init(sites: domain(?)){this.sites = sites;}
+    }
   }
 }

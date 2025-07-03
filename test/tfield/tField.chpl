@@ -1,6 +1,6 @@
 /*
  * ReliQ lattice field theory framework: github.com/ctpeterson/ReliQ
- * Source file: tests/tlattice/tBravaisLattice.chpl
+ * Source file: test/tfield/tField.chpl
  * Author: Curtis Taylor Peterson <curtistaylorpetersonwork@gmail.com>
  *
  * MIT License
@@ -26,11 +26,14 @@
  * SOFTWARE.
  */
 
-public use BravaisLattice;
+private use Lattice;
+private use Field;
 
-// chpl tBravaisLattice.chpl ../../src/lattice/BravaisLattice.chpl
-proc main {
-  var 
+proc main() {
+  const 
     geometry = {1..8,1..8,1..8,1..8},
-    lattice = new SimpleCubicLattice(geometry);
+    lattice = Lattice.BravaisLattice.PaddedBlockDistSimpleCubicLattice(geometry);
+  var
+    phi = new Field.ScalarField.RealScalarField(lattice),
+    psi = new Field.ScalarField.RealScalarField(lattice);
 }
