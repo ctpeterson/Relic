@@ -29,6 +29,7 @@
 private use Lattice;
 private use Field;
 
+// chpl tField.chpl ../../src/field/Field.chpl ../../src/lattice/Lattice.chpl
 proc main() {
   const 
     geometry = {1..8,1..8,1..8,1..8},
@@ -40,7 +41,14 @@ proc main() {
     rphica = rphi,
     rphicb = rphi.storage,
     cphi = new Field.ComplexScalarField(lattice);
-  //rphi = 2.0;
+  rpsi.set(3.0);
+  rphi.set(rpsi);
+  rphi.set(rpsi.storage);
+  rphi.set(rpsi.field);
+  //rphi = rpsi.field;
+  rphi.set(2.0);
   rpsi = rphi + rphi;
   rpsi = rphi*rpsi;
+  rpsi = rphi - rpsi;
+  rphi = rpsi/rphi;
 }

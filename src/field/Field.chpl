@@ -44,6 +44,13 @@ module Field {
 
     proc init=(const other: [?L] ?T){this.init(T,L); this.storage = other;}
 
+    /*
+    proc operator:(const other: [?L] ?T){
+      assert(this.lattice == L);
+      this.storage = other;
+    }
+    */
+
     proc this(args: this.D*int){return this.storage[args];}
 
     proc ref sites: domain(?) {return this.lattice;}
@@ -62,32 +69,92 @@ module Field {
 
     ComplexScalarField = ScalarField(complex,?);
 
-  private proc conformable(x: ScalarField(?), y: ScalarField(?)) 
+  private inline proc conformable(x: ScalarField(?), y: ScalarField(?)) 
   {assert(x.lattice == y.lattice);}
 
-  /*
-  public operator ScalarField.=(ref x: ScalarField(?T,?), y: T){
-    ref xfield = x.field;
-    forall n in x.sites do {xfield[n] = y;}
-  }
-  */
+  private inline proc conformable(x: ScalarField(?), y: [?L] ?T){assert(x.lattice == L);}
 
   public operator ScalarField.=(ref x: ScalarField(?), y: ScalarField(?))
-  {assert(x.lattice == y.lattice); x.storage = y.storage;}
+  {conformable(x,y); x.storage = y.storage;}
 
-  public operator ScalarField.+(x: ScalarField(?X,?D), y: ScalarField(?Y,D)){
+  /*
+  public operator ScalarField.=(ref x: ScalarField(?), y: [?L] ?T)
+  {conformable(x,y); x.storage = y;}
+  */
+
+  public inline proc ref ScalarField.set(y: this.T){
+    ref xf = this.field;
+    const ref 
+      doms = this.lattice.localSubdomains(),
+      locs = this.lattice.targetLocales();
+    coforall (dom,loc) in zip(doms,locs) do {on loc {foreach n in dom do xf[n] = y;}}
+  }
+
+  public inline proc ref ScalarField.set(y: [this.lattice] this.T){
+    ref xf = this.field;
+    const ref 
+      doms = this.lattice.localSubdomains(),
+      locs = this.lattice.targetLocales();
+    coforall (dom,loc) in zip(doms,locs) do {on loc {foreach n in dom do xf[n] = y[n];}}
+  }
+
+  public inline proc ref ScalarField.set(y: ScalarField(this.T,this.D,?)){
+    ref xf = this.field;
+    const ref 
+      doms = this.lattice.localSubdomains(),
+      locs = this.lattice.targetLocales();
+    coforall (dom,loc) in zip(doms,locs) do {on loc {foreach n in dom do xf[n] = y[n];}}
+  }
+
+  public inline operator ScalarField.+(x: ScalarField(?X,?D), y: ScalarField(?Y,D)){
     conformable(x,y);
     var z = new ScalarField(X,x.lattice);
-    ref zfield = z.field;
-    forall n in z.sites do {zfield[n] = x[n] + y[n];}
+    ref zf = z.field;
+    const ref 
+      doms = z.lattice.localSubdomains(),
+      locs = z.lattice.targetLocales();
+    coforall (dom,loc) in zip(doms,locs) do {
+      on loc {foreach n in dom do zf[n] = x[n] + y[n];}
+    }
+    return z;
+  }
+
+  public inline operator ScalarField.-(x: ScalarField(?X,?D), y: ScalarField(?Y,D)){
+    conformable(x,y);
+    var z = new ScalarField(X,x.lattice);
+    ref zf = z.field;
+    const ref 
+      doms = z.lattice.localSubdomains(),
+      locs = z.lattice.targetLocales();
+    coforall (dom,loc) in zip(doms,locs) do {
+      on loc {foreach n in dom do zf[n] = x[n] - y[n];}
+    }
     return z;
   }
   
-  public operator ScalarField.*(x: ScalarField(?X,?D), y: ScalarField(?Y,D)){
+  public inline operator ScalarField.*(x: ScalarField(?X,?D), y: ScalarField(?Y,D)){
     conformable(x,y);
     var z = new ScalarField(X,x.lattice);
-    ref zfield = z.field;
-    forall n in z.sites do {zfield[n] = x[n]*y[n];}
+    ref zf = z.field;
+    const ref 
+      doms = z.lattice.localSubdomains(),
+      locs = z.lattice.targetLocales();
+    coforall (dom,loc) in zip(doms,locs) do {
+      on loc {foreach n in dom do zf[n] = x[n]*y[n];}
+    }
+    return z;
+  }
+
+  public inline operator ScalarField./(x: ScalarField(?X,?D), y: ScalarField(?Y,D)){
+    conformable(x,y);
+    var z = new ScalarField(X,x.lattice);
+    ref zf = z.field;
+    const ref 
+      doms = z.lattice.localSubdomains(),
+      locs = z.lattice.targetLocales();
+    coforall (dom,loc) in zip(doms,locs) do {
+      on loc {foreach n in dom do zf[n] = x[n]/y[n];}
+    }
     return z;
   }
 
