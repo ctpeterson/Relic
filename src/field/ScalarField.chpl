@@ -1,6 +1,6 @@
 /*
  * ReliQ lattice field theory framework: github.com/ctpeterson/ReliQ
- * Source file: src/ReliQ.chpl
+ * Source file: src/field/ScalarField.chpl
  * Author: Curtis Taylor Peterson <curtistaylorpetersonwork@gmail.com>
  *
  * MIT License
@@ -26,6 +26,43 @@
  * SOFTWARE.
  */
 
-public use Lattice;
-public use Field;
+record ScalarField: serializable {
+  type T;
+  param D: int;
+  var lattice: domain(?);
+  var field: [lattice] T;
 
+  proc init(type T, lattice: domain(?)) {
+    this.T = T; 
+    this.D = lattice.rank;
+    this.lattice = lattice;
+  }
+
+  proc init=(const other: ScalarField(?T)) {
+    this.init(T, other.lattice); 
+    this.field = other.field; 
+  }
+
+  proc init=(const other: [?L] ?T) { this.init(T, L); this.field = other; }
+
+  proc this(args: this.D*int) { return this.field[args]; }
+
+  proc const ref sites { return this.lattice; }
+
+  proc const ref localSublattices(loc: locale = here) { 
+    return this.lattice.localSubdomains(loc); 
+  }
+
+  proc const ref locales: [] locale { return this.lattice.targetLocales(); }
+}
+
+public type 
+  IntegerScalarFieldS = ScalarField(int(32),?),
+  IntegerScalarFieldD = ScalarField(int(64),?),
+  IntegerScalarField = IntegerScalarFieldD(?),
+
+  RealScalarFieldS = ScalarField(real(32),?),
+  RealScalarFieldD = ScalarField(real(64),?),
+  RealScalarField = RealScalarFieldD(?),
+
+  ComplexScalarField = ScalarField(complex,?);

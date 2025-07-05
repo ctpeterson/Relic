@@ -1,6 +1,6 @@
 /*
  * ReliQ lattice field theory framework: github.com/ctpeterson/ReliQ
- * Source file: src/ReliQ.chpl
+ * Source file: src/field/TensorField.chpl
  * Author: Curtis Taylor Peterson <curtistaylorpetersonwork@gmail.com>
  *
  * MIT License
@@ -26,6 +26,12 @@
  * SOFTWARE.
  */
 
-public use Lattice;
-public use Field;
+private use ScalarField;
 
+record TensorField: serializable {
+  type T;
+  param R,D: int;
+  var shape: domain(R,int);
+  var lattice: domain(?);
+  var storage: [shape] ScalarField(T,D,lattice);
+}

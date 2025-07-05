@@ -29,26 +29,27 @@
 private use Lattice;
 private use Field;
 
-// chpl tField.chpl ../../src/field/Field.chpl ../../src/lattice/Lattice.chpl
+// chpl tField.chpl ../../src/field/Field.chpl ../../src/field/ScalarField.chpl ../../src/field/implementation/ScalarFieldImpl.chpl ../../src/lattice/Lattice.chpl
+// ./tField -nl 1x1 --dataParTasksPerLocale=2
 proc main() {
   const 
-    geometry = {1..8,1..8,1..8,1..8},
-    lattice = Lattice.BravaisLattice.PaddedBlockDistSimpleCubicLattice(geometry);
+    geometry = {1..8,1..8,1..8,1..16},
+    pad = (1,1,1,1),
+    lattice = Lattice.BravaisLattice.SimpleCubicLattice(geometry, padding = pad);
   var
     iphi = new Field.IntegerScalarField(lattice),
     rphi = new Field.RealScalarField(lattice),
     rpsi = new Field.RealScalarField(lattice),
     rphica = rphi,
-    rphicb = rphi.storage,
+    rphicb = rphi.field,
     cphi = new Field.ComplexScalarField(lattice);
   rpsi.set(3.0);
   rphi.set(rpsi);
-  rphi.set(rpsi.storage);
   rphi.set(rpsi.field);
-  //rphi = rpsi.field;
   rphi.set(2.0);
   rpsi = rphi + rphi;
   rpsi = rphi*rpsi;
   rpsi = rphi - rpsi;
   rphi = rpsi/rphi;
+  writeln(rphi);
 }

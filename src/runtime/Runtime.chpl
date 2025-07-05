@@ -1,6 +1,6 @@
 /*
  * ReliQ lattice field theory framework: github.com/ctpeterson/ReliQ
- * Source file: src/ReliQ.chpl
+ * Source file: src/runtime/Runtime.chpl
  * Author: Curtis Taylor Peterson <curtistaylorpetersonwork@gmail.com>
  *
  * MIT License
@@ -25,7 +25,4 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
-public use Lattice;
-public use Field;
 

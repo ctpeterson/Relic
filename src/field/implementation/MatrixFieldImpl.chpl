@@ -1,6 +1,6 @@
 /*
  * ReliQ lattice field theory framework: github.com/ctpeterson/ReliQ
- * Source file: src/ReliQ.chpl
+ * Source file: src/field/implementation/MatrixFieldImpl.chpl
  * Author: Curtis Taylor Peterson <curtistaylorpetersonwork@gmail.com>
  *
  * MIT License
@@ -26,6 +26,6 @@
  * SOFTWARE.
  */
 
-public use Lattice;
-public use Field;
-
+private use TensorField;
+private use TensorFieldImpl;
+private use GaugeField;

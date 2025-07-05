@@ -1,6 +1,6 @@
 /*
  * ReliQ lattice field theory framework: github.com/ctpeterson/ReliQ
- * Source file: src/ReliQ.chpl
+ * Source file: src/field/MatrixField.chpl
  * Author: Curtis Taylor Peterson <curtistaylorpetersonwork@gmail.com>
  *
  * MIT License
@@ -26,6 +26,15 @@
  * SOFTWARE.
  */
 
-public use Lattice;
-public use Field;
+private use TensorField;
 
+public type
+  IntegerMatrixFieldS = TensorField(int(32),2,?),
+  IntegerMatrixFieldD = TensorField(int(64),2,?),
+  IntegerMatrixField = IntegerMatrixFieldD(?),
+
+  RealMatrixFieldS = TensorField(real(32),2,?),
+  RealMatrixFieldD = TensorField(real(64),2,?),
+  RealMatrixField = RealMatrixFieldD(?),
+
+  ComplexMatrixField = TensorField(complex,2,?);

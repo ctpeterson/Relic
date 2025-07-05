@@ -28,34 +28,21 @@
 
 module Lattice {
   module BravaisLattice {
-    private use BlockDist;
     private use StencilDist;
 
     private proc defaultPadding(param r: int): r*int {var p: r*int; return p;}
-    
-    public proc BlockDistSimpleCubicLattice(geometry: domain(?)): domain(?) {
-      const blockDistGeometry = new BlockDist.blockDist(boundingBox = geometry);
-      return blockDistGeometry.createDomain(geometry);
-    }
 
-    public proc PaddedBlockDistSimpleCubicLattice(
+    public proc SimpleCubicLattice(
       geometry: domain(?),
       param rank: int = geometry.rank,
-      tasksPerLocale: int = dataParTasksPerLocale,
-      minGranularity: int = dataParMinGranularity,
       padding: rank*int = defaultPadding(rank),
-      ignoreRunning: bool = dataParIgnoreRunningTasks,
       periodic: bool = true
     ): domain(?) {
-      const stencilDistGeometry = new StencilDist.stencilDist(
+      return geometry dmapped new stencilDist(
         boundingBox = geometry,
-        dataParTasksPerLocale = tasksPerLocale,
-        dataParIgnoreRunningTasks = ignoreRunning,
-        dataParMinGranularity = dataParMinGranularity,
         fluff = padding,
         periodic = periodic
-      ); 
-      return stencilDistGeometry.createDomain(geometry);
+      );
     }
   }
 }
